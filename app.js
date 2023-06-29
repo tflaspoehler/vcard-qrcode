@@ -48,7 +48,7 @@ TEL;CELL:${cell}
 EMAIL;INTERNET:${email}
 URL:https://andmore.com
 END:VCARD`;
-            url = `http://chart.googleapis.com/chart?cht=qr&chs=240x240&chl=${encodeURIComponent(text)}`;
+            url = `https://chart.googleapis.com/chart?cht=qr&chs=240x240&chl=${encodeURIComponent(text)}`;
             vm.contacts.push({
                 last: last,
                 first: first,
