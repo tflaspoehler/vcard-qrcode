@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Vcard Qrcode</title>
+        <link data-react-helmet="true" href="style.css" rel="stylesheet" />
+        <script type="text/javascript" src="zip.min.js"></script>
+        <script type="text/javascript" src="qrcode.js"></script>
+    </head>
+    <style>
+        #qrcode {
+            width:160px;
+            height:160px;
+            margin-top:15px;
+        }
+    </style>
+    <body>
+        <h1>VCard-QRCode</h1>
+        <p>upload a CSV file</p>
+        <input id="text" type="text" value="https://hogangnono.com" style="width:80%" /><br />
+        <a onclick="makeCode()">Make Code</a><br />
+        <div id="qrcode"></div>
+        <script>
+            var qrcode = new QRCode("qrcode");
+
+            function makeCode() {
+                var elText = document.getElementById("text");
+
+                if (!elText.value) {
+                    alert("Input a text");
+                    elText.focus();
+                    return;
+                }
+
+                qrcode.makeCode(elText.value);
+            }
+
+        </script>
+    </body>
+</html>
