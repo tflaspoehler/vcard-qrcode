@@ -2,37 +2,70 @@
     <head>
         <title>Vcard Qrcode</title>
         <link data-react-helmet="true" href="style.css" rel="stylesheet" />
-        <script type="text/javascript" src="zip.min.js"></script>
+        <script type="text/javascript" src="zip.js"></script>
         <script type="text/javascript" src="qrcode.js"></script>
     </head>
-    <style>
-        #qrcode {
-            width:160px;
-            height:160px;
-            margin-top:15px;
-        }
-    </style>
     <body>
         <h1>VCard-QRCode</h1>
         <p>upload a CSV file</p>
-        <input id="text" type="text" value="https://hogangnono.com" style="width:80%" /><br />
+        Select a file:
+        <input type="file" id="myFile" />
+        <button onclick="processFile()">Process</button>
+        <br />
         <a onclick="makeCode()">Make Code</a><br />
-        <div id="qrcode"></div>
+        <img id="qrcode" />
+
         <script>
-            var qrcode = new QRCode("qrcode");
-
-            function makeCode() {
-                var elText = document.getElementById("text");
-
-                if (!elText.value) {
-                    alert("Input a text");
-                    elText.focus();
-                    return;
-                }
-
-                qrcode.makeCode(elText.value);
+            function makeCode(data) {
+                let last = data[0];
+                let first = data[1];
+                let name = first + " " + last;
+                let title = data[2] + " - " + data[3];
+                let phone = data[4];
+                let cell = data[5];
+                let email = data[6]
+                console.log(last, first)
+                let text = `BEGIN:VCARD
+VERSION:3.0
+N:${last};${first}
+FN:${name}
+ORG:ANDMORE
+TITLE:${title}
+TEL;VOICE:${phone}
+TEL;CELL:${cell}
+EMAIL;INTERNET:${email}
+URL:https://andmore.com
+END:VCARD`;
+                var url = `http://chart.googleapis.com/chart?cht=qr&chs=240x240&chl=${encodeURIComponent(text)}`;
+                console.log(url);
+                document.getElementById("qrcode").src = url;
             }
 
+            function processFile() {
+                var file = document.querySelector("#myFile").files[0];
+                var reader = new FileReader();
+                reader.readAsText(file);
+
+                //if you need to read a csv file with a 'ISO-8859-1' encoding
+                /*reader.readAsText(file,'ISO-8859-1');*/
+
+                //When the file finish load
+                reader.onload = function (event) {
+                    //get the file.
+                    var csv = event.target.result;
+
+                    //split and get the rows in an array
+                    var rows = csv.split("\n");
+
+                    //move line by line
+                    // for (var i = 2; i < rows.length; i++) {
+                    for (var i = 2; i < 4; i++) {
+                        //split by separator (,) and get the columns
+                        cols = rows[i].replace('"','').replace('"','').split(",");
+                        makeCode(cols);
+                    }
+                };
+            }
         </script>
     </body>
 </html>
