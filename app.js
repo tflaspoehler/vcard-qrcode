@@ -24,7 +24,6 @@ qrCodeApp = angular.module("qrCodeApp", ['ngRoute'])
     vm.updateTable = function(csv) {
         vm.contacts = [];
         vm.download = true;
-        vm.loaded = true;
         localStorage.setItem("contacts", csv);
         var rows = csv.split("\n");
         vm.headings = rows[0].replace(", "," - ").replace(/["]/g,"").split(",");
@@ -61,7 +60,6 @@ END:VCARD`;
                 text: text,
                 url: url,
             });
-            console.log(vm.contacts[vm.contacts.length-1])
         }
     }
 
@@ -82,16 +80,36 @@ END:VCARD`;
             vm.updateTable(csv);
             $scope.$digest();
         };
-        // setTimeout(() => {vm.contacts = contacts;}, 1000);
-        console.log(vm.contacts);
-        // $compile(document.querySelector("#table").contents())($scope);
     }
     let storage = localStorage.getItem("contacts")
-    console.log(storage);
     if (storage != null) {vm.updateTable(storage);}
 
-    vm.downloadCodes = function() {
+    $scope.downloadCodes = function() {
+
+        function urlToPromise(url) {
+            return new Promise(function(resolve, reject) {
+                JSZipUtils.getBinaryContent(url, function (err, data) {
+                    if(err) {
+                        reject(err);
+                    } else {
+                        resolve(data);
+                    }
+                });
+            });
+        }
+
+        function downloadZip(z) {
+            z.generateAsync({type:"base64"}).then(function (base64) {
+                window.location = "data:application/zip;base64," + base64;
+            });
+        }
+
         console.log("downloading");
+        let zip = new JSZip();
+        vm.contacts.forEach((contact) => {
+            zip.file(`${contact.first.split(" ")[0]}-${contact.last}.png`, urlToPromise(contact.url), {binary:true});
+        });
+        setTimeout(downloadZip(zip), 1000);
     }
 
 
