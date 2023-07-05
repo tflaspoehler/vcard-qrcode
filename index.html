@@ -11,7 +11,7 @@
             table tr td {
                 vertical-align: middle!important;
             }
-            td:last-child {
+            td:first-child {
                 padding: 0!important;
                 text-align: center!important;
                 width: fit-content;
@@ -40,19 +40,30 @@
         <table ng-if="vm.contacts" class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="table">
             <thead>
               <tr>
+                <th><strong>QR</strong></th>
                 <th ng-repeat="heading in vm.headings"><strong>{{heading}}</strong></th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="contact in vm.contacts">
-                <td>{{contact.first}}</td>
-                <td>{{contact.last}}</td>
-                <td>{{contact.title}}</td>
-                <td>{{contact.phone}}</td>
-                <td>{{contact.cell}}</td>
-                <td>{{contact.email}}</td>
                 <td><img ng-src={{contact.url}} style="width: 50px; height: 50px;" /></td>
+                <td ng-if="vm.headings[0]">{{contact.first}} {{contact.last}}</td>
+                <td ng-if="vm.headings[1]">{{contact.title}}</td>
+                <td ng-if="vm.headings[2]">{{contact.phone}}</td>
+                <td ng-if="vm.headings[3]">{{contact.cell}}</td>
+                <td ng-if="vm.headings[4]">{{contact.email}}</td>
+                <td ng-if="vm.headings[5]">{{contact.business}}</td>
+                <td ng-if="vm.headings[6]">{{contact.bcity}}</td>
+                <td ng-if="vm.headings[7]">{{contact.bstate}}</td>
+                <td ng-if="vm.headings[8]">{{contact.bzip}}</td>
+                <td ng-if="vm.headings[9]">{{contact.home}}</td>
+                <td ng-if="vm.headings[10]">{{contact.hcity}}</td>
+                <td ng-if="vm.headings[11]">{{contact.hstate}}</td>
+                <td ng-if="vm.headings[12]">{{contact.hzip}}</td>
+                <td ng-if="vm.headings[13]">{{contact.other}}</td>
+                <td ng-if="vm.headings[14]">{{contact.ocity}}</td>
+                <td ng-if="vm.headings[15]">{{contact.ostate}}</td>
+                <td ng-if="vm.headings[16]">{{contact.ozip}}</td>
               </tr>
             </tbody>
         </table>

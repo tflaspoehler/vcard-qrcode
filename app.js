@@ -27,7 +27,7 @@ qrCodeApp = angular.module("qrCodeApp", ['ngRoute'])
         localStorage.setItem("contacts", csv);
         var rows = csv.split("\n");
         vm.headings = rows[0].replace(", "," - ").replace(/["]/g,"").split(",");
-        for (var i = 2; i < rows.length-1; i++) {
+        for (var i = 1; i < rows.length-1; i++) {
             //split by separator (,) and get the columns
             data = rows[i].replace(", "," - ").replace(", "," - ").replace(/["]/g,"").split(",");
             let last = data[0].split(" - ")[0];
@@ -36,7 +36,19 @@ qrCodeApp = angular.module("qrCodeApp", ['ngRoute'])
             let title = data[1];
             let phone = data[2];
             let cell = data[3];
-            let email = data[4]
+            let email = data[4];
+            let business = data[5];
+            let bcity = data[6];
+            let bstate = data[7];
+            let bzip = data[8];
+            let home = data[9];
+            let hcity = data[10];
+            let hstate = data[11];
+            let hzip = data[12];
+            let other = data[13];
+            let ocity = data[14];
+            let ostate = data[15];
+            let ozip = data[16];
             let text = `BEGIN:VCARD
 VERSION:3.0
 N:${last};${first}
@@ -46,7 +58,30 @@ TITLE:${title}
 TEL;VOICE:${phone}
 TEL;CELL:${cell}
 EMAIL;INTERNET:${email}
-URL:https://andmore.com
+URL:https://andmore.com`;
+            if (business != undefined && business != "") {
+                text += `
+ADR;WORK;PREF:;;${business};${bcity};${bstate};${bzip}`;
+                if (home != undefined && home != "") {
+                    text += `
+ADR;HOME:;;${home};${hcity};${hstate};${hzip}`;
+                }
+                if (other != undefined && other != "") {
+                    text += `
+ADR;POSTAL:;;${other};${ocity};${ostate};${ozip}`;
+                }
+            } else if (home != undefined && home != "") {
+                text += `
+ADR;HOME;PREF:;;${home};${hcity};${hstate};${hzip}`;
+                if (other != undefined && other != "") {
+                    text += `
+ADR;POSTAL:;;${other};${ocity};${ostate};${ozip}`;
+                }
+            } else if (other != undefined && other != "") {
+                text += `
+ADR;POSTAL;PREF:;;${other};${ocity};${ostate};${ozip}`;
+            }
+            text += `
 END:VCARD`;
             url = `https://chart.googleapis.com/chart?cht=qr&chs=240x240&chl=${encodeURIComponent(text)}`;
             vm.contacts.push({
@@ -59,6 +94,18 @@ END:VCARD`;
                 email: email,
                 text: text,
                 url: url,
+                business: business,
+                bcity: bcity,
+                bstate: bstate,
+                bzip: bzip,
+                home: home,
+                hcity: hcity,
+                hstate: hstate,
+                hzip: hzip,
+                other: other,
+                ocity: ocity,
+                ostate: ostate,
+                ozip: ozip,
             });
         }
     }
